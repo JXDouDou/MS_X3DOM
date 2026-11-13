@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>構件實驗室｜營造法式數位平台</title>
+
+  <!-- x3dom 鎖定 1.8.3 版（不要用 release/，它會自己變新版） -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/x3dom@1.8.3/x3dom.css" />
+  <script src="https://cdn.jsdelivr.net/npm/x3dom@1.8.3/x3dom.js"></script>
+
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body class="lab">
+  <header class="topbar">
+    <a href="./index.html" class="back">← 首頁</a>
+    <h1>構件實驗室</h1>
+    <span class="hint">拖曳旋轉・滾輪縮放・點構件看資訊・Esc 取消選取</span>
+  </header>
+
+  <main class="lab-main">
+    <!-- 左邊：3D 場景 -->
+    <section class="viewport" id="viewport">
+      <x3d id="x3d">
+        <scene>
+          <navigationinfo type='"EXAMINE" "ANY"' headlight="true"></navigationinfo>
+          <viewpoint position="4 4 9" centerOfRotation="0 2.5 0" description="預設"></viewpoint>
+          <background skyColor="0.95 0.93 0.89"></background>
+          <directionallight direction="-0.5 -1 -0.6" intensity="0.6"></directionallight>
+
+          <!-- 地面格線（每格 1 公尺），由 JS 填入 -->
+          <group id="grid"></group>
+
+          <!-- 比例人（身高約 170 cm），方便感受材等造成的實際大小 -->
+          <transform translation="1.6 0 0">
+            <transform translation="0 0.72 0">
+              <shape>
+                <appearance><material diffuseColor="0.35 0.45 0.6" transparency="0.3"></material></appearance>
+                <cylinder radius="0.17" height="1.44"></cylinder>
+              </shape>
+            </transform>
+            <transform translation="0 1.58 0">
+              <shape>
+                <appearance><material diffuseColor="0.35 0.45 0.6" transparency="0.3"></material></appearance>
+                <sphere radius="0.12"></sphere>
+              </shape>
+            </transform>
+          </transform>
+
+          <!-- 構件都放在這裡；scale = 1 分° 是幾公尺，由 JS 設定 -->
+          <transform id="model"></transform>
+        </scene>
+      </x3d>
+      <div id="tooltip" class="tooltip" hidden></div>
+    </section>
+
+    <!-- 右邊：控制面板 -->
+    <aside class="panel">
+      <section>
+        <h2>參數</h2>
+
+        <label class="field">
+          <span>材等</span>
+          <select id="caiDeng"></select>
+        </label>
+        <p class="sub" id="caiInfo"></p>
+
+        <label class="field">
+          <span>柱形</span>
+          <select id="columnShape">
+            <option value="suo">梭柱（上段收殺）</option>
+            <option value="straight">直柱（線性收分）</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>柱高 <b id="hVal"></b></span>
+          <input type="range" id="columnHeight" min="150" max="600" step="5" value="300" />
+        </label>
+
+        <label class="field">
+          <span>柱徑 <b id="dVal"></b></span>
+          <input type="range" id="columnDiameter" min="30" max="45" step="1" value="42" />
+        </label>
+
+        <label class="field" id="taperField">
+          <span>收分 <b id="tVal"></b></span>
+          <input type="range" id="taper" min="0" max="20" step="1" value="7" />
+        </label>
+      </section>
+
+      <section>
+        <h2>操作</h2>
+        <div class="buttons">
+          <button id="btnExplode" class="primary">拆開</button>
+          <button id="btnFit">重設視角</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>構件資訊</h2>
+        <div id="info" class="info">
+          <p class="sub">點選場景中的構件，這裡會顯示它的資訊。</p>
+        </div>
+      </section>
+
+      <p class="credit">尺寸依《營造法式》常見數字簡化，僅供示範。</p>
+    </aside>
+  </main>
+
+  <script type="module" src="/src/lab.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+# npm 安裝的套件（用 npm install 就能重新產生，不進 Git）
+node_modules/
+# vite build 的輸出
+dist/
+# 本機實驗（three.js 比較等），依專案約定不 commit
+spike/
+CLAUDE.md
+docs/
+.\CLAUDE.md
+\.claude
