@@ -18,6 +18,7 @@
 
 * { box-sizing: border-box; }
 body { margin: 0; }
+[hidden] { display: none !important; }  /* 讓 hidden 屬性永遠有效 */
 a { color: var(--accent); }
 
 /* ---------- 首頁 ---------- */
@@ -134,3 +135,22 @@ button.primary { background: var(--accent); color: var(--accent-ink); border-col
   .panel { width: auto; border-left: none; border-top: 1px solid var(--line); }
   .topbar .hint { display: none; }
 }
+
+.panel.collapsed { display: none; }
+
+/* ---------- 漫遊頁 ---------- */
+/* 畫面左下角的操作提示 */
+.hud {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  pointer-events: none;
+  background: rgb(43 38 32 / 0.7);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+}
+/* 按鈕太多時自動換行 */
+.buttons.wrap { flex-wrap: wrap; margin-top: 4px; }
+.buttons.wrap button { flex: 1 1 40%; }

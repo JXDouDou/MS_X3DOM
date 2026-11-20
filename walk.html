@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>建築漫遊｜營造法式數位平台</title>
+
+  <!-- x3dom 鎖定 1.8.3 版 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/x3dom@1.8.3/x3dom.css" />
+  <script src="https://cdn.jsdelivr.net/npm/x3dom@1.8.3/x3dom.js"></script>
+
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body class="lab">
+  <header class="topbar">
+    <a href="./index.html" class="back">← 首頁</a>
+    <h1>建築漫遊</h1>
+    <span class="hint">點一下畫面後：W A S D 移動・拖曳滑鼠轉頭・Shift 加速・Q / E 降低 / 升高視線</span>
+  </header>
+
+  <main class="lab-main">
+    <section class="viewport" id="viewport">
+      <!-- disableKeys：關掉 x3dom 內建快捷鍵（例如 w 會切換模式），鍵盤交給我們自己處理 -->
+      <x3d id="x3d" disableKeys="true">
+        <scene>
+          <!-- type "NONE"：x3dom 不移動相機，由 walker.js 控制 -->
+          <navigationinfo id="nav" type='"NONE"' headlight="true"></navigationinfo>
+          <viewpoint id="cam" position="0 1.6 20" fieldOfView="0.9" zNear="0.05" zFar="500"></viewpoint>
+          <!-- 天空漸層：skyAngle 的個數要比 skyColor 少 1（頭頂 → 地平線） -->
+          <background skyColor="0.55 0.7 0.9, 0.92 0.92 0.88" skyAngle="1.57"></background>
+          <!-- ambientIntensity：環境光，讓背光的面也有一點亮度，不會全黑 -->
+          <directionallight direction="-0.4 -1 -0.5" intensity="0.55" ambientIntensity="0.5"></directionallight>
+          <!-- 由下往上的弱補光（模擬地面反光），屋簷底下才不會全黑 -->
+          <directionallight direction="0.3 1 0.2" intensity="0.35"></directionallight>
+
+          <!-- 地面格線，高度由 JS 對齊台基底部 -->
+          <transform id="gridRoot"><group id="grid"></group></transform>
+
+          <!-- 程式產生的示範殿堂（scale = 1 分° 幾公尺）-->
+          <transform id="model"></transform>
+
+          <!-- 外部模型（SketchUp 轉換後的 X3D），選了才載入 -->
+          <transform id="extRoot" render="false"></transform>
+        </scene>
+      </x3d>
+      <div id="tooltip" class="tooltip" hidden></div>
+      <div class="hud" id="hud">第一人稱模式</div>
+    </section>
+
+    <aside class="panel">
+      <section>
+        <h2>模型</h2>
+        <label class="field">
+          <span>來源</span>
+          <select id="source">
+            <option value="hall">示範殿堂（程式產生）</option>
+            <option value="ext">北科大大樣（STL 簡化測試版）</option>
+          </select>
+        </label>
+        <p class="sub" id="sourceMsg"></p>
+      </section>
+
+      <section id="hallParams">
+        <h2>殿堂參數</h2>
+        <label class="field"><span>材等</span><select id="caiDeng"></select></label>
+        <label class="field">
+          <span>面闊 <b id="bxVal"></b></span>
+          <input type="range" id="baysX" min="1" max="7" step="2" value="3" />
+        </label>
+        <label class="field">
+          <span>進深 <b id="bzVal"></b></span>
+          <input type="range" id="baysZ" min="1" max="4" step="1" value="2" />
+        </label>
+        <label class="field">
+          <span>間廣 <b id="bayVal"></b></span>
+          <input type="range" id="bay" min="200" max="450" step="10" value="300" />
+        </label>
+        <label class="field">
+          <span>柱高 <b id="hVal"></b></span>
+          <input type="range" id="columnHeight" min="200" max="500" step="10" value="300" />
+        </label>
+      </section>
+
+      <section>
+        <h2>觀看方式</h2>
+        <div class="buttons">
+          <button id="modeWalk" class="primary">第一人稱</button>
+          <button id="modeOrbit">環繞</button>
+        </div>
+        <label class="field" style="margin-top:12px">
+          <span>移動速度 <b id="spVal"></b></span>
+          <input type="range" id="speed" min="0.5" max="8" step="0.5" value="2.5" />
+        </label>
+        <div class="buttons wrap" id="viewButtons"></div>
+      </section>
+
+      <section id="opsSection">
+        <h2>操作</h2>
+        <div class="buttons">
+          <button id="btnExplode">拆開</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>構件資訊</h2>
+        <div id="info" class="info"><p class="sub">點選構件（不要拖曳）會顯示資訊。</p></div>
+      </section>
+    </aside>
+  </main>
+
+  <script type="module" src="/src/walk.js"></script>
+</body>
+</html>
