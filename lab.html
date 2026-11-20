@@ -21,12 +21,13 @@
   <main class="lab-main">
     <!-- 左邊：3D 場景 -->
     <section class="viewport" id="viewport">
-      <x3d id="x3d">
+      <x3d id="x3d" disableKeys="true">
         <scene>
           <navigationinfo type='"EXAMINE" "ANY"' headlight="true"></navigationinfo>
           <viewpoint position="4 4 9" centerOfRotation="0 2.5 0" description="預設"></viewpoint>
           <background skyColor="0.95 0.93 0.89"></background>
-          <directionallight direction="-0.5 -1 -0.6" intensity="0.6"></directionallight>
+          <!-- ambientIntensity：環境光，讓背光的面也有一點亮度（方塊用平面著色後需要）-->
+          <directionallight direction="-0.5 -1 -0.6" intensity="0.5" ambientIntensity="0.5"></directionallight>
 
           <!-- 地面格線（每格 1 公尺），由 JS 填入 -->
           <group id="grid"></group>
@@ -94,6 +95,7 @@
         <div class="buttons">
           <button id="btnExplode" class="primary">拆開</button>
           <button id="btnFit">重設視角</button>
+          <button id="btnRandom">隨機柱高</button>
         </div>
       </section>
 
