@@ -28,3 +28,16 @@ npm run dev
 | `src/lib/bracket.js` | 構件規則：用參數產生柱 + 枓栱（單位：分°） |
 | `src/lib/x3d-scene.js` | 把構件資料畫成 x3dom 節點、拆開動畫、選取高亮 |
 | `src/data/cai-deng.json` | 材等表 |
+| `walk.html` + `src/walk.js` | 建築漫遊：第一人稱 / 環繞；示範殿堂或外部模型 |
+| `src/lib/hall.js`、`src/lib/walker.js` | 示範殿堂產生器、第一人稱控制 |
+| `tools/stl-to-x3d.mjs` | STL → 簡化 X3D（測試版大樣模型） |
+
+## 轉換 SketchUp 匯出的 STL
+
+原始檔放在 `raw/`（不進 Git），轉出來的檔案放在 `public/models/`：
+
+```bash
+node --max-old-space-size=8192 tools/stl-to-x3d.mjs raw/dayang_v8.stl public/models/dayang.x3d --target 900000 --unit 0.01
+```
+
+`--unit` 是 STL 的 1 個單位等於幾公尺（公分填 0.01）。轉好後打開 `walk.html?source=ext`。

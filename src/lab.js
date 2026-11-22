@@ -71,6 +71,7 @@ function renderInfo() {
   }
   const [x, y, z] = part.size;
   // 用表格列出屬性；之後要加欄位（例如彩畫等級）就在這裡加一列
+  //<tr><th>頂點數</th><td>${part.mesh.points.length}</td></tr>
   $('info').innerHTML = `
     <h3>${part.name}</h3>
     <table>
@@ -142,9 +143,17 @@ $('btnExplode').addEventListener('click', () => {
 const fit = () => $('x3d').runtime?.fitObject($('model'), true);
 $('btnFit').addEventListener('click', fit);
 
+$('btnRandom').addEventListener('click', () => {
+  state.columnHeight = Math.round((Math.random() * 450 + 150) / 5) * 5; // 150~600 分°，取整數
+  $('columnHeight').value = state.columnHeight;
+  regenerate();
+});
+
 // Esc 取消選取
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') select(null);
+  if (e.key === 'e') $('btnExplode').click();// 快捷鍵 e = 拆開 / 組合
+  if (e.key === 'h') document.querySelector('.panel').classList.toggle('collapsed');// 快捷鍵 h = 隱藏 / 顯示資訊面板
 });
 
 // ---- 第一次畫面 ----

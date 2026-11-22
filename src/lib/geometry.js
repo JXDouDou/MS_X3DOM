@@ -87,7 +87,8 @@ export function lathe(profile, segments = 32) {
   addCap(0, false);
   addCap(profile.length - 1, true);
 
-  return { points, faces };
+  // smooth = true：告訴畫面層這個形狀要「平滑著色」（圓柱側面才不會一條一條的）
+  return { points, faces, smooth: true };
 }
 
 /** 平移：回傳新的網格，不改原本的 */

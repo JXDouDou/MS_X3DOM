@@ -11,6 +11,7 @@ export default defineConfig({
       input: {
         index: resolve(import.meta.dirname, 'index.html'), // 首頁（入口 hub）
         lab: resolve(import.meta.dirname, 'lab.html'),     // 構件實驗室
+        walk: resolve(import.meta.dirname, 'walk.html'),   // 建築漫遊
       },
     },
   },

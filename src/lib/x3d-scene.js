@@ -17,12 +17,13 @@ function shapeMarkup(mesh, color) {
   // coordIndex：每個面的頂點編號，面與面之間用 -1 隔開
   const coordIndex = mesh.faces.map((f) => f.join(' ') + ' -1').join(' ');
   // 注意：HTML 裡的 x3dom 標籤不能寫成 <box/> 這種自我結束的寫法，一定要有結束標籤
+  // creaseAngle：相鄰面夾角小於它就「抹平」光影。圓柱要抹平；方塊設 0，稜角才清楚
   return `
     <shape>
       <appearance>
         <material diffuseColor="${color.join(' ')}" specularColor="0.15 0.15 0.15" shininess="0.2"></material>
       </appearance>
-      <indexedfaceset solid="false" creaseAngle="0.8" coordIndex="${coordIndex}">
+      <indexedfaceset solid="false" creaseAngle="${mesh.smooth ? 1.2 : 0}" coordIndex="${coordIndex}">
         <coordinate point="${point}"></coordinate>
       </indexedfaceset>
     </shape>`;
@@ -66,6 +67,11 @@ export function createScene({ root, onPick, onHover }) {
     /** 換一組構件（參數改了就呼叫）。同 id 的構件會沿用原本的 <transform>。 */
     setParts(newParts) {
       parts = newParts;
+      // 新清單裡沒有的構件（例如柱網變小了）要從場景移除
+      const keep = new Set(parts.map((p) => p.id));
+      for (const [id, el] of nodes) {
+        if (!keep.has(id)) { el.remove(); nodes.delete(id); }
+      }
       for (const part of parts) {
         let el = nodes.get(part.id);
         if (!el) {

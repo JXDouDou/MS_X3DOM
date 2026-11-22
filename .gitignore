@@ -8,3 +8,7 @@ CLAUDE.md
 docs/
 .\CLAUDE.md
 \.claude
+raw/
+*.skp
+# 轉換後的模型（測試版，之後會換成 .dae 版本）
+public/models/
